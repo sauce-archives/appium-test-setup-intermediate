@@ -17,10 +17,6 @@ dependencies {
 
 }
 
-test {
-    exclude 'com/testobject/calculatortest/OperationTests.class'
-}
-
 task wrapper(type: Wrapper) {
     gradleVersion = '2.0'
 }
