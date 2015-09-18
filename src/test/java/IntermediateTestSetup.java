@@ -36,12 +36,12 @@ public class IntermediateTestSetup {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         /* These are the capabilities we must provide to run our test on TestObject. */
-        capabilities.setCapability("testobject_api_key", System.getenv("testobject-api-key")); // API key through env variable
+        capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_API_KEY")); // API key through env variable
         //capabilities.setCapability("testobject_api_key", "YOUR_API_KEY")); // API key hardcoded
 
         capabilities.setCapability("testobject_app_id", "1");
 
-        capabilities.setCapability("testobject_device", System.getenv("testobject-device-id")); // device id through env variable
+        capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
         //capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
 
         driver = new AndroidDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
