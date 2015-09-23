@@ -9,6 +9,16 @@ repositories {
     }
 }
 
+test {
+    testLogging {
+        showCauses = true
+        showExceptions = true
+        showStackTraces = true
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
