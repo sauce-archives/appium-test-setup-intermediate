@@ -39,7 +39,7 @@ public class IntermediateTestSetup {
 
         EnvironmentVariablesExporter.writeFile(varList, "environment.txt");
 
-
+//
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         /* These are the capabilities we must provide to run our test on TestObject. */

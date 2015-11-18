@@ -21,7 +21,7 @@ public class EnvironmentVariablesExporter {
 
             writer.close();
 
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {//
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
