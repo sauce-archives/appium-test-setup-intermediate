@@ -38,7 +38,7 @@ public class IntermediateTestSetup {
 //        String[] varList = polishedEnv.split("\\, ");
 
         String[] varList = new String[1];
-        varList[0] = "TEST=123";
+        varList[0] =  "TEST=123";
 
         EnvironmentVariablesExporter.writeFile(varList, "environment.txt");
 
