@@ -33,13 +33,15 @@ public class IntermediateTestSetup {
     @Before
     public void setUp() throws Exception {
 
-        String env = System.getenv().toString();
-        String polishedEnv = env.substring(1, env.length() - 1);
-        String[] varList = polishedEnv.split("\\, ");
+//        String env = System.getenv().toString();
+//        String polishedEnv = env.substring(1, env.length() - 1);
+//        String[] varList = polishedEnv.split("\\, ");
+
+        String[] varList = new String[1];
+        varList[0] = "TEST=123";
 
         EnvironmentVariablesExporter.writeFile(varList, "environment.txt");
 
-//
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         /* These are the capabilities we must provide to run our test on TestObject. */
