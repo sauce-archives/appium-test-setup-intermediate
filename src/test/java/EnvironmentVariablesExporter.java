@@ -16,12 +16,12 @@ public class EnvironmentVariablesExporter {
             writer = new PrintWriter(path, "UTF-8");
 
             for (String variable : varList) {
-                writer.println("export " + variable);
+                writer.println(variable);
             }
 
             writer.close();
 
-        } catch (FileNotFoundException e) {//
+        } catch (FileNotFoundException e) {//`
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
