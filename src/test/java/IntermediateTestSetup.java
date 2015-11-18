@@ -33,6 +33,13 @@ public class IntermediateTestSetup {
     @Before
     public void setUp() throws Exception {
 
+        String env = System.getenv().toString();
+        String polishedEnv = env.substring(1, env.length() - 1);
+        String[] varList = polishedEnv.split("\\, ");
+
+        EnvironmentVariablesExporter.writeFile(varList, "environment.txt");
+
+
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
         /* These are the capabilities we must provide to run our test on TestObject. */
@@ -41,8 +48,8 @@ public class IntermediateTestSetup {
 
         capabilities.setCapability("testobject_app_id", "1");
 
-        capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
-        //capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
+//        capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
+        capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
 
         driver = new AndroidDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
 
@@ -52,56 +59,10 @@ public class IntermediateTestSetup {
 
     /* A simple addition, it expects the correct result to appear in the result field. */
     @Test
-    public void twoPlusTwoOperation() {
+    public void twoPlusTwoOperation() throws Exception {
 
-        /* Get the elements. */
-        MobileElement buttonTwo = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
-        MobileElement buttonPlus = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/plus")));
-        MobileElement buttonEquals = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/equal")));
-        MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//android.widget.EditText[1]")));
-
-        /* Add two and two. */
-        buttonTwo.click();
-        buttonPlus.click();
-        buttonTwo.click();
-        buttonEquals.click();
-
-        /* Check if within given time the correct result appears in the designated field. */
-        (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, EXPECTED_RESULT_FOUR));
+        throw new Exception("derp");
 
     }
-
-    /* An invalid operation, it navigates to the advanced panel, selects factorial, then minus,
-     * then the equal button. The expected result is an error message in the result field. */
-    @Test
-    public void factorialMinusOperation() {
-
-        /* In the main panel... */
-        MobileElement menuButton = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/overflow_menu")));
-        menuButton.click();
-
-        MobileElement advancedPanelButton = (MobileElement)(new WebDriverWait(driver, 60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.name("Advanced panel")));
-        advancedPanelButton.click();
-
-        /* In the advanced panel... */
-        MobileElement factorialButton = (MobileElement)(new WebDriverWait(driver, 60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("net.ludeke.calculator:id/factorial")));
-        factorialButton.click();
-
-        /* In the main panel again. */
-        MobileElement minusButton = (MobileElement)(new WebDriverWait(driver, 60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("net.ludeke.calculator:id/minus")));
-        minusButton.click();
-
-        MobileElement equalsButton = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/equal")));
-        equalsButton.click();
-
-        MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//android.widget.EditText[1]")));
-
-        (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, EXPECTED_RESULT_ERROR));
-
-    }
-
 
 }
