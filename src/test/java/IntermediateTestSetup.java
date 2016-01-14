@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testobject.appium.junit.TestObjectTestResultWatcher;
 
 import java.net.URL;
+import java.util.Optional;
 
 public class IntermediateTestSetup {
 
@@ -44,7 +45,9 @@ public class IntermediateTestSetup {
         capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
         //capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
 
-        driver = new AndroidDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
+        String testobjectAppiumEndpoint = Optional.ofNullable(System.getenv("APPIUM_URL"))
+                .orElse("https://app.testobject.com:443/api/appium/wd/hub");
+        driver = new AndroidDriver(new URL(testobjectAppiumEndpoint), capabilities);
 
         resultWatcher.setAppiumDriver(driver);
 
