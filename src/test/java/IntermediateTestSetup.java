@@ -28,7 +28,7 @@ public class IntermediateTestSetup {
     public TestObjectTestResultWatcher resultWatcher = new TestObjectTestResultWatcher();
 
     private final static String EXPECTED_RESULT_FOUR = "4";
-    private final static String EXPECTED_RESULT_ERROR = "Error";
+    private final static String EXPECTED_RESULT_NAN = "NaN";
 
     /* This is the setup that will be run before the test. */
     @Before
@@ -38,12 +38,12 @@ public class IntermediateTestSetup {
 
         /* These are the capabilities we must provide to run our test on TestObject. */
         capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_API_KEY")); // API key through env variable
-        //capabilities.setCapability("testobject_api_key", "YOUR_API_KEY")); // API key hardcoded
+//        capabilities.setCapability("testobject_api_key", "YOUR_API_KEY"); // API key hardcoded
 
         capabilities.setCapability("testobject_app_id", "1");
 
         capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
-        //capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
+//        capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
 
         String testobjectAppiumEndpoint = Optional.ofNullable(System.getenv("APPIUM_URL"))
                 .orElse("https://app.testobject.com:443/api/appium/wd/hub");
@@ -74,35 +74,26 @@ public class IntermediateTestSetup {
 
     }
 
-    /* An invalid operation, it navigates to the advanced panel, selects factorial, then minus,
-     * then the equal button. The expected result is an error message in the result field. */
+
+
+    /* A simple zero divided by zero operation. */
     @Test
-    public void factorialMinusOperation() {
+    public void zerosDivisionOperation() {
 
-        /* In the main panel... */
-        MobileElement menuButton = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/overflow_menu")));
-        menuButton.click();
-
-        MobileElement advancedPanelButton = (MobileElement)(new WebDriverWait(driver, 60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.name("Advanced panel")));
-        advancedPanelButton.click();
-
-        /* In the advanced panel... */
-        MobileElement factorialButton = (MobileElement)(new WebDriverWait(driver, 60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("net.ludeke.calculator:id/factorial")));
-        factorialButton.click();
-
-        /* In the main panel again. */
-        MobileElement minusButton = (MobileElement)(new WebDriverWait(driver, 60))
-                .until(ExpectedConditions.presenceOfElementLocated(By.id("net.ludeke.calculator:id/minus")));
-        minusButton.click();
-
-        MobileElement equalsButton = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/equal")));
-        equalsButton.click();
-
+        /* Get the elements. */
+        MobileElement digitZero = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/digit0")));
+        MobileElement buttonDivide = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/div")));
+        MobileElement buttonEquals = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/equal")));
         MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//android.widget.EditText[1]")));
 
-        (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, EXPECTED_RESULT_ERROR));
+        /* Divide zero by zero. */
+        digitZero.click();
+        buttonDivide.click();
+        digitZero.click();
+        buttonEquals.click();
+
+        /* Check if within given time the correct error message appears in the designated field. */
+        (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, EXPECTED_RESULT_NAN));
 
     }
 
