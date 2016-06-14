@@ -1,7 +1,6 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,6 +13,7 @@ import org.testobject.appium.junit.TestObjectTestResultWatcher;
 
 import java.net.URL;
 import java.util.Optional;
+import java.util.UUID;
 
 public class IntermediateTestSetup {
 
@@ -44,6 +44,12 @@ public class IntermediateTestSetup {
 
         capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
 //        capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
+
+
+        // We generate a random UUID for later lookup in logs for debugging
+        String testUUID = UUID.randomUUID().toString();
+        System.out.println("TestUUID: " + testUUID);
+        capabilities.setCapability("testobject_testuuid", testUUID);
 
         String testobjectAppiumEndpoint = Optional.ofNullable(System.getenv("APPIUM_URL"))
                 .orElse("https://app.testobject.com:443/api/appium/wd/hub");
