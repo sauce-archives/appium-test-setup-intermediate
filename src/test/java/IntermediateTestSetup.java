@@ -45,6 +45,10 @@ public class IntermediateTestSetup {
         capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
 //        capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
 
+		String cacheDevice = System.getenv("TESTOBJECT_CACHE_DEVICE");
+		if (cacheDevice != null && cacheDevice.trim().isEmpty() == false) {
+			capabilities.setCapability("testobject_cache_device", cacheDevice);
+		}
 
         // We generate a random UUID for later lookup in logs for debugging
         String testUUID = UUID.randomUUID().toString();
