@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -116,14 +117,10 @@ public class IntermediateTestSetup {
     }
 
     private void saveVideo(String filename) {
-        String url = (String)driver.getCapabilities().getCapability("testobject_test_report_url");
-        Pattern pattern = Pattern.compile("/(\\w+)/(\\w+)/appium/executions/(\\d+)");
-        Matcher matcher = pattern.matcher(url);
-        matcher.find();
-
-        String team = matcher.group(0);
-        String project = matcher.group(1);
-        long reportId = Long.parseLong(matcher.group(2));
+        Capabilities capabilities = driver.getCapabilities();
+        String team = (String)capabilities.getCapability("testobject_user_id");
+        String project = (String)capabilities.getCapability("testobject_project_id");
+        long reportId = (long)capabilities.getCapability("testobject_report_id");
 
         String username = System.getenv("TESTOBJECT_USERNAME");
         String password = System.getenv("TESTOBJECT_PASSWORD");
