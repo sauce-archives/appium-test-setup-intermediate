@@ -9,11 +9,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testobject.api.TestObjectClient;
 import org.testobject.appium.junit.TestObjectTestResultWatcher;
 
+import java.io.*;
 import java.net.URL;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class IntermediateTestSetup {
 
@@ -82,6 +86,8 @@ public class IntermediateTestSetup {
         /* Check if within given time the correct result appears in the designated field. */
         (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, EXPECTED_RESULT_FOUR));
 
+        saveVideo("two-plus-two.mp4");
+
     }
 
 
@@ -105,7 +111,43 @@ public class IntermediateTestSetup {
         /* Check if within given time the correct error message appears in the designated field. */
         (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, EXPECTED_RESULT_NAN));
 
+        saveVideo("divide-by-zero.mp4");
+
     }
 
+    private void saveVideo(String filename) {
+        String url = (String)driver.getCapabilities().getCapability("testobject_test_report_url");
+        Pattern pattern = Pattern.compile("/(\\w+)/(\\w+)/appium/executions/(\\d+)");
+        Matcher matcher = pattern.matcher(url);
+        matcher.find();
+
+        String team = matcher.group(0);
+        String project = matcher.group(1);
+        long reportId = Long.parseLong(matcher.group(2));
+
+        String username = System.getenv("TESTOBJECT_USERNAME");
+        String password = System.getenv("TESTOBJECT_PASSWORD");
+        if (username != null && password != null) {
+            TestObjectClient client = TestObjectClient.Factory.create();
+            client.login(username, password);
+            AppiumTestReport testReport = client.getTestReport(team, project, reportId);
+
+            try (InputStream video = client.getVideo(team, project, testReport.getVideoId());
+                    OutputStream file = new FileOutputStream(filename)) {
+
+                int read;
+                byte[] bytes = new byte[1024];
+
+                while ((read = video.read(bytes)) != -1) {
+                    file.write(bytes, 0, read);
+                }
+            } catch (IOException e) {
+                System.out.println("Failed to save " + filename + ": " + e);
+            }
+            System.out.println("Saved test recording to " + filename);
+        } else {
+            System.out.println("No username/password set; not saving " + filename + " test recording.");
+        }
+    }
 
 }
