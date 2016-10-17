@@ -6,11 +6,16 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testobject.api.TestObjectClient;
 import org.testobject.appium.junit.TestObjectTestResultWatcher;
+import org.testobject.rest.api.appium.common.TestObjectCapabilities;
+import org.testobject.rest.api.model.AppiumTestReport;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Optional;
 import java.util.UUID;
@@ -82,6 +87,8 @@ public class IntermediateTestSetup {
         /* Check if within given time the correct result appears in the designated field. */
         (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, EXPECTED_RESULT_FOUR));
 
+        saveVideo("/tmp/two-plus-two.mp4");
+
     }
 
 
@@ -105,7 +112,50 @@ public class IntermediateTestSetup {
         /* Check if within given time the correct error message appears in the designated field. */
         (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, EXPECTED_RESULT_NAN));
 
+        saveVideo("/tmp/divide-by-zero.mp4");
+
     }
 
+    private void saveVideo(String filename) {
+        System.out.println("Saving video to " + filename);
+        Capabilities capabilities = driver.getCapabilities();
+        String team = (String)capabilities.getCapability(TestObjectCapabilities.TESTOBJECT_USER_ID);
+        String project = (String)capabilities.getCapability(TestObjectCapabilities.TESTOBJECT_PROJECT_ID);
+        long reportId = (long)capabilities.getCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID);
+
+        String username = System.getenv("TESTOBJECT_USERNAME");
+        String password = System.getenv("TESTOBJECT_PASSWORD");
+        if (username != null && password != null) {
+            TestObjectClient client = TestObjectClient.Factory.create();
+            client.login(username, password);
+
+            File video = new File(filename);
+            String videoId = getVideoId(client, team, project, reportId);
+            client.saveVideo(team, project, videoId, video);
+            System.out.println("Saved test recording to " + filename);
+        } else {
+            System.out.println("No username/password set; not saving " + filename + " test recording.");
+        }
+    }
+
+    private String getVideoId(TestObjectClient client, String team, String project, long reportId) {
+        long timeout = System.currentTimeMillis() + 1000 * 240;
+        while (System.currentTimeMillis() < timeout) {
+            AppiumTestReport testReport = client.getTestReport(team, project, reportId);
+            if (testReport.getVideoId() != null) {
+                System.out.println("Got videoId");
+                return testReport.getVideoId();
+            } else {
+                driver.getContext(); // keepalive
+                System.out.println("No videoId. Waiting...");
+                try {
+                    Thread.sleep(10 * 1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException("Encountered exception while waiting to get video ID");
+                }
+            }
+        }
+        throw new RuntimeException("Timeout expired while waiting for videoId for " + team + "/" + project + "/" + reportId);
+    }
 
 }
