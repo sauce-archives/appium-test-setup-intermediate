@@ -20,7 +20,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
     testCompile 'io.appium:java-client:3.1.0'
-    testCompile 'org.testobject:testobject-appium-java-api:' + (System.getenv("TESTOBJECT_APPIUM_JAVA_API_VERSION") ?: '0.0.19')
+    testCompile 'org.testobject:testobject-appium-java-api:' + (System.getenv("TESTOBJECT_APPIUM_JAVA_API_VERSION") ?: '0.0.26')
 
 }
 
