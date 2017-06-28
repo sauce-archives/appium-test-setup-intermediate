@@ -59,6 +59,9 @@ public class IntermediateTestSetup {
                 .orElse("https://app.testobject.com:443/api/appium/wd/hub");
         driver = new AndroidDriver(new URL(testobjectAppiumEndpoint), capabilities);
 
+        System.out.println(driver.getCapabilities().getCapability("testobject_test_report_url"));
+        System.out.println(driver.getCapabilities().getCapability("testobject_test_live_view_url"));
+
         resultWatcher.setRemoteWebDriver(driver);
 
     }
