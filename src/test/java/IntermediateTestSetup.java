@@ -49,6 +49,17 @@ public class IntermediateTestSetup {
 		if (cacheDevice != null && cacheDevice.trim().isEmpty() == false) {
 			capabilities.setCapability("testobject_cache_device", cacheDevice);
 		}
+	
+
+		String TESTOBJECT_SESSION_CREATION_TIMEOUT = System.getenv("TESTOBJECT_SESSION_CREATION_TIMEOUT");
+		if (TESTOBJECT_SESSION_CREATION_TIMEOUT != null) {
+			capabilities.setCapability("testobject_session_creation_timeout", TESTOBJECT_SESSION_CREATION_TIMEOUT);
+		}
+
+		String TESTOBJECT_SESSION_CREATION_RETRY = System.getenv("TESTOBJECT_SESSION_CREATION_RETRY");
+		if (TESTOBJECT_SESSION_CREATION_RETRY != null) {
+			capabilities.setCapability("testobject_session_creation_retry", TESTOBJECT_SESSION_CREATION_RETRY);
+		}
 
         // We generate a random UUID for later lookup in logs for debugging
         String testUUID = UUID.randomUUID().toString();
