@@ -2,6 +2,9 @@
 
 def runTest() {
     node {
+        stage("checkout") {
+            checkout scm
+        }
         stage("test") {
             try {
                 sh "./gradlew clean test"
