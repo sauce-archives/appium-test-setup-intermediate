@@ -7,7 +7,7 @@ def runTest() {
         }
         stage("test") {
             try {
-                docker.build("java:8").inside {
+                docker.image("java:8").inside {
                     sh "./gradlew clean test"
                 }
             } finally {
