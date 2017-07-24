@@ -42,7 +42,7 @@ public class IntermediateTestSetup {
 
 		capabilities.setCapability("testobject_app_id", "1");
 
-		capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE_ID")); // device id through env variable
+		capabilities.setCapability("testobject_device", System.getenv("TESTOBJECT_DEVICE")); // device id through env variable
 //		capabilities.setCapability("testobject_device", "Motorola_Moto_G_2nd_gen_real"); // device id hardcoded
 
 		String cacheDevice = System.getenv("TESTOBJECT_CACHE_DEVICE");
